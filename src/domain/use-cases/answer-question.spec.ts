@@ -1,11 +1,22 @@
-import { expect, test } from 'vitest'
-import { AnswerQuestionUseCase } from './answer-question'
+import { expect, test } from 'vitest';
+import { AnswerQuestionUseCase } from './answer-question';
+import { AnswersRepository } from '../repositories/answers-repository';
+import { Answer } from '../entities/answer';
 
-test('create answer', () => {
-  const answerQuestionUseCase = new AnswerQuestionUseCase();
+const fakeAnswerRepository: AnswersRepository = {
+  create: async (answer: Answer) => {
+    return;
+  },
+};
 
-  const answerQuestion = answerQuestionUseCase.execute({ content: 'Nova Resposta', questionId: '1', instructorId: '1' });
+test('create answer', async () => {
+  const answerQuestionUseCase = new AnswerQuestionUseCase(fakeAnswerRepository);
+
+  const answerQuestion = await answerQuestionUseCase.execute({
+    content: 'Nova Resposta',
+    questionId: '1',
+    instructorId: '1',
+  });
 
   expect(answerQuestion.content).toEqual('Nova Resposta');
-
-})
+});
