@@ -1,5 +1,5 @@
-import { Answer } from '../entities/answer';
-import { UniqueEntityID } from '../entities/value-objects/unique-entity-id';
+import { Answer } from '@/domain/forum/enterprise/entities/answer';
+import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { AnswersRepository } from '../repositories/answers-repository';
 
 interface Props {
