@@ -1,4 +1,5 @@
 import { Answer } from '../entities/answer';
+import { UniqueEntityID } from '../entities/value-objects/unique-entity-id';
 import { AnswersRepository } from '../repositories/answers-repository';
 
 interface Props {
@@ -9,8 +10,13 @@ interface Props {
 
 export class AnswerQuestionUseCase {
   constructor(private answersRepository: AnswersRepository) {}
+
   public async execute({ instructorId, questionId, content }: Props) {
-    const answer = new Answer({ content, authorId: instructorId, questionId });
+    const answer = Answer.create({
+      content,
+      authorId: new UniqueEntityID(instructorId),
+      questionId: new UniqueEntityID(questionId),
+    });
     console.log(answer);
 
     await this.answersRepository.create(answer);

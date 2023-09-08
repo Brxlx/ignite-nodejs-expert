@@ -11,7 +11,6 @@ const fakeAnswerRepository: AnswersRepository = {
 
 test('create answer', async () => {
   const answerQuestionUseCase = new AnswerQuestionUseCase(fakeAnswerRepository);
-  console.log(answerQuestionUseCase);
 
   const answerQuestion = await answerQuestionUseCase.execute({
     content: 'Nova Resposta',
