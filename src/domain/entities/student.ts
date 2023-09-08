@@ -1,4 +1,4 @@
-import { Entity } from '../../core/entities/entity';
+import { Entity } from '@/core/entities/entity';
 import { UniqueEntityID } from './value-objects/unique-entity-id';
 
 interface StudentProps {
