@@ -18,6 +18,10 @@ describe('Create Question', () => {
     });
 
     expect(question.id).toBeTruthy();
-    expect(inMemoryQuestionsRepository.items[0].id).toEqual(question.id);
+    expect(inMemoryQuestionsRepository.items.get(question.id)?.id).toEqual(question.id);
+
+    inMemoryQuestionsRepository.items.delete(question.id);
+
+    console.log(inMemoryQuestionsRepository);
   });
 });

@@ -19,6 +19,6 @@ describe('Create Answer', () => {
     });
 
     expect(answer.id).toBeTruthy();
-    expect(inMemoryAnswersRepository.items[0].id).toEqual(answer.id);
+    expect(inMemoryAnswersRepository.items.get(answer.id)?.id).toEqual(answer.id);
   });
 });
