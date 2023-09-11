@@ -21,7 +21,5 @@ describe('Create Question', () => {
     expect(inMemoryQuestionsRepository.items.get(question.id)?.id).toEqual(question.id);
 
     inMemoryQuestionsRepository.items.delete(question.id);
-
-    console.log(inMemoryQuestionsRepository);
   });
 });
