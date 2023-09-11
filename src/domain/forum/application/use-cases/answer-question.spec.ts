@@ -1,5 +1,6 @@
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository';
 import { AnswerQuestionUseCase } from './answer-question-use-case';
+import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 // system under test
@@ -19,6 +20,7 @@ describe('Create Answer', () => {
     });
 
     expect(answer.id).toBeTruthy();
+    expect(answer.id).toBeInstanceOf(UniqueEntityID);
     expect(inMemoryAnswersRepository.items.get(answer.id)?.id).toEqual(answer.id);
   });
 });

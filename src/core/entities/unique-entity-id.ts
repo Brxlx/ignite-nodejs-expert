@@ -11,7 +11,11 @@ export class UniqueEntityID {
     return this.value;
   }
 
+  private generateId(): string {
+    return randomUUID();
+  }
+
   constructor(value?: string) {
-    this.value = value ?? randomUUID();
+    this.value = value ?? this.generateId();
   }
 }
