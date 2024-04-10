@@ -5,6 +5,15 @@ import { Question } from '@/domain/forum/enterprise/entities/question';
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   // public items: Question[] = [];
   public items = new Map<UniqueEntityID, Question>();
+
+  async findById(id: string): Promise<Question | null> {
+    const question = Array.from(this.items.values()).find(item => item.id.toString() === id);
+
+    if (!question) return null;
+
+    return question;
+  }
+
   async create(question: Question): Promise<void> {
     // this.items.push(question);
     this.items.set(question.id, question);
@@ -16,5 +25,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     if (!question) return null;
 
     return question;
+  }
+  async delete(question: Question): Promise<void> {
+    const questionExists = Array.from(this.items.values()).find(item => item.id === question.id);
+
+    if (questionExists) {
+      this.items.delete(questionExists.id);
+    }
   }
 }
