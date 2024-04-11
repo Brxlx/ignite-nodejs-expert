@@ -1,4 +1,5 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { PaginationParams } from '@/core/repositories/pagination-params';
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository';
 import { Answer } from '@/domain/forum/enterprise/entities/answer';
 
@@ -12,6 +13,12 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     if (!answer) return null;
 
     return answer;
+  }
+
+  async findManyByQuestionId(questionId: string, { page }: PaginationParams): Promise<Answer[]> {
+    return Array.from(this.items.values())
+      .filter(item => item.questionId.toString() === questionId)
+      .slice((page - 1) * 20, page * 20);
   }
 
   async create(answer: Answer): Promise<void> {
