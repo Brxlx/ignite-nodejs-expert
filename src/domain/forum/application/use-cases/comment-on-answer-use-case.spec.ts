@@ -26,8 +26,6 @@ describe('Comment on answer', () => {
       content: 'Comentário teste',
     });
 
-    console.log(inMemoryAnswerCommentsRepository.items);
-
     expect(inMemoryAnswerCommentsRepository.items.get(answerComment.id)?.content).toEqual(
       'Comentário teste'
     );

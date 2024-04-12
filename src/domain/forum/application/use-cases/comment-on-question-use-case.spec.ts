@@ -18,7 +18,7 @@ describe('Comment on question', () => {
       inMemoryQuestionCommentsRepository
     );
   });
-  it('should be able to comment on question', async () => {
+  it('should be able to delete question comment', async () => {
     const newQuestion = makeQuestion({});
 
     await inMemoryQuestionsRepository.create(newQuestion);
@@ -28,8 +28,6 @@ describe('Comment on question', () => {
       authorId: newQuestion.authorId.toString(),
       content: 'Comentário teste',
     });
-
-    console.log(inMemoryQuestionCommentsRepository.items);
 
     expect(inMemoryQuestionCommentsRepository.items.get(questionComment.id)?.content).toEqual(
       'Comentário teste'

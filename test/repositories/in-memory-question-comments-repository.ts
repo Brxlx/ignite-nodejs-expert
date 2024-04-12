@@ -6,8 +6,26 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
   // public items: Question[] = [];
   public items = new Map<UniqueEntityID, QuestionComment>();
 
-  async create(question: QuestionComment): Promise<void> {
+  async findById(id: string): Promise<QuestionComment | null> {
+    const questionComment = Array.from(this.items.values()).find(item => item.id.toString() === id);
+
+    if (!questionComment) return null;
+
+    return questionComment;
+  }
+
+  async create(questionComment: QuestionComment): Promise<void> {
     // this.items.push(question);
-    this.items.set(question.id, question);
+    this.items.set(questionComment.id, questionComment);
+  }
+
+  async delete(questionComment: QuestionComment): Promise<void> {
+    const questionCommentExists = Array.from(this.items.values()).find(
+      item => item.id === questionComment.id
+    );
+
+    if (questionCommentExists) {
+      this.items.delete(questionCommentExists.id);
+    }
   }
 }
