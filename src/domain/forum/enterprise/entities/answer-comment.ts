@@ -8,7 +8,7 @@ export interface AnswerCommentProps extends CommentProps {
 
 export class AnswerComment extends Comment<AnswerCommentProps> {
   get answerId(): UniqueEntityID {
-    return this.answerId;
+    return this.props.answerId;
   }
 
   static create(props: Optional<AnswerCommentProps, 'createdAt'>, id?: UniqueEntityID) {
