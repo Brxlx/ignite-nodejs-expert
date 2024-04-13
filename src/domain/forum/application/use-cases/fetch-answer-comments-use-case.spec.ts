@@ -29,9 +29,9 @@ describe('Fetch answer comments from answer', () => {
       })
     );
 
-    const { answerComments } = await sut.execute({ answerId: 'answer-1', page: 1 });
+    const result = await sut.execute({ answerId: 'answer-1', page: 1 });
 
-    expect(answerComments).toHaveLength(3);
+    expect(result.value?.answerComments).toHaveLength(3);
   });
 
   it('should be able to fetch paginated answer comments', async () => {
@@ -43,8 +43,8 @@ describe('Fetch answer comments from answer', () => {
       );
     }
 
-    const { answerComments } = await sut.execute({ answerId: 'answer-1', page: 2 });
+    const result = await sut.execute({ answerId: 'answer-1', page: 2 });
 
-    expect(answerComments).toHaveLength(2);
+    expect(result.value?.answerComments).toHaveLength(2);
   });
 });

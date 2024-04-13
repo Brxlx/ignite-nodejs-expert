@@ -2,6 +2,8 @@ import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-r
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { EditAnswerUseCase } from './edit-answer-use-case';
+import { NotAllowedError } from './errors/not-allowed-error';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 // system under test
@@ -46,13 +48,14 @@ describe('Edit Answer', () => {
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({
-        authorId: 'author-2',
-        content: 'Novo conteúdo',
-        answerId: newAnswer.id.toValue(),
-      });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: 'author-2',
+      content: 'Novo conteúdo',
+      answerId: newAnswer.id.toValue(),
+    });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 
   it('should not be able to edit an invalid answer', async () => {
@@ -68,12 +71,13 @@ describe('Edit Answer', () => {
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({
-        authorId: newAnswer.authorId.toString(),
-        content: 'Novo conteúdo',
-        answerId: 'answer-2',
-      });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: newAnswer.authorId.toString(),
+      content: 'Novo conteúdo',
+      answerId: 'answer-2',
+    });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });

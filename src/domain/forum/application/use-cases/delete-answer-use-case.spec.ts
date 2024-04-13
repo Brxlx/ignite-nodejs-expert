@@ -2,6 +2,8 @@ import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-r
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { DeleteAnswerUseCase } from './delete-answer-use-case';
+import { NotAllowedError } from './errors/not-allowed-error';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 // system under test
@@ -43,9 +45,10 @@ describe('Delete Answer', () => {
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({ authorId: 'author-2', answerId: 'answer-1' });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({ authorId: 'author-2', answerId: 'answer-1' });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 
   it('should not be able to delete an invalid answer', async () => {
@@ -61,8 +64,9 @@ describe('Delete Answer', () => {
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({ authorId: 'author-1', answerId: 'answer-2' });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({ authorId: 'author-1', answerId: 'answer-2' });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });

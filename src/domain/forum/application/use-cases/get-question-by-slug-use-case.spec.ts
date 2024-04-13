@@ -12,17 +12,23 @@ describe('Get Question By Slug', () => {
     sut = new GetQuestionBySlugUseCase(inMemoryQuestionsRepository);
   });
   it('should be able to get a question by slug', async () => {
-    const newQuestion = makeQuestion();
-    // console.log(newQuestion);
+    const newQuestion = makeQuestion({});
     await inMemoryQuestionsRepository.create(newQuestion);
-    // Prefered way
-    const { question } = await sut.execute({ slug: newQuestion.slug.value });
-    // Alternative way
-    // const { question } = await sut.execute({ slug: 'example-question' });
 
-    expect(question.id).toBeTruthy();
-    expect(inMemoryQuestionsRepository.items.get(question.id)?.id).toEqual(question.id);
-    expect(question.title).toEqual(newQuestion.title);
-    expect(question.slug).toEqual(newQuestion.slug);
+    const result = await sut.execute({ slug: newQuestion.slug.value });
+
+    if (result.isRight()) {
+      expect(result.value?.question.title).toEqual(newQuestion.title);
+    }
+
+    expect(result.isRight()).toBeTruthy();
+    // expect(Array.from(inMemoryQuestionsRepository.items.values())[0]).toEqual(result.value);
+    expect(result.value).toMatchObject({
+      question: expect.objectContaining({
+        title: newQuestion.title,
+        slug: newQuestion.slug,
+      }),
+    });
+    // expect(result.value?.question.slug).toEqual(newQuestion.slug);
   });
 });

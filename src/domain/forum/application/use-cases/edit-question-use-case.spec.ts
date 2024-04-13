@@ -2,6 +2,8 @@ import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questio
 import { makeQuestion } from 'test/factories/make-question';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { EditQuestionUseCase } from './edit-question-use-case';
+import { NotAllowedError } from './errors/not-allowed-error';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 // system under test
@@ -48,14 +50,15 @@ describe('Edit Question', () => {
     // const a = await sut.execute({ questionId: 'question-1' });
     // Alternative way
     // const { question } = await sut.execute({ slug: 'example-question' });
-    expect(() => {
-      return sut.execute({
-        authorId: 'author-2',
-        title: 'Pergunta teste',
-        content: 'Novo conteúdo',
-        questionId: newQuestion.id.toValue(),
-      });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: 'author-2',
+      title: 'Pergunta teste',
+      content: 'Novo conteúdo',
+      questionId: newQuestion.id.toValue(),
+    });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 
   it('should not be able to edit an invalid question', async () => {
@@ -71,13 +74,14 @@ describe('Edit Question', () => {
     // const a = await sut.execute({ questionId: 'question-1' });
     // Alternative way
     // const { question } = await sut.execute({ slug: 'example-question' });
-    expect(() => {
-      return sut.execute({
-        authorId: newQuestion.authorId.toString(),
-        title: 'Pergunta teste',
-        content: 'Novo conteúdo',
-        questionId: 'question-2',
-      });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: newQuestion.authorId.toString(),
+      title: 'Pergunta teste',
+      content: 'Novo conteúdo',
+      questionId: 'question-2',
+    });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });

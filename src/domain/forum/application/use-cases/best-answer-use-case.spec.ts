@@ -4,6 +4,8 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository';
 import { BestAnswerQuestionUseCase } from './best-answer-use-case';
 import { makeQuestion } from 'test/factories/make-question';
+import { NotAllowedError } from './errors/not-allowed-error';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
@@ -53,26 +55,34 @@ describe('Choose question best answer', () => {
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({ authorId: 'author-2', answerId: newAnswer.id.toString() });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({ authorId: 'author-2', answerId: newAnswer.id.toString() });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 
   it('should not be able to choose best answer from an invalid answer', async () => {
+    const newQuestion = makeQuestion({
+      authorId: new UniqueEntityID('author-1'),
+    });
     const newAnswer = makeAnswer(
       {
         authorId: new UniqueEntityID('author-1'),
+        questionId: newQuestion.id,
       },
       new UniqueEntityID('answer-1')
     );
+
+    await inMemoryQuestionsRepository.create(newQuestion);
     await inMemoryAnswersRepository.create(newAnswer);
     // Prefered way
     // await sut.execute({ authorId: 'author-2', answerId: 'answer-1' });
     // const a = await sut.execute({ answerId: 'answer-1' });
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
-    expect(() => {
-      return sut.execute({ authorId: 'author-1', answerId: 'answer-2' });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({ authorId: 'author-1', answerId: 'answer-2' });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });

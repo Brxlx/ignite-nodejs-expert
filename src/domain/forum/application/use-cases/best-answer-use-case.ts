@@ -1,14 +1,20 @@
 import { AnswersRepository } from '../repositories/answers-repository';
 import { Question } from '../../enterprise/entities/question';
 import { QuestionsRepository } from '../repositories/questions-repository';
+import { Either, left, right } from '@/core/types/either';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { NotAllowedError } from './errors/not-allowed-error';
 
 interface BestAnswerQuestionRequest {
   answerId: string;
   authorId: string;
 }
-interface BestAnswerQuestionResponse {
-  question: Question;
-}
+type BestAnswerQuestionResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {
+    question: Question;
+  }
+>;
 
 export class BestAnswerQuestionUseCase {
   constructor(
@@ -22,18 +28,18 @@ export class BestAnswerQuestionUseCase {
   }: BestAnswerQuestionRequest): Promise<BestAnswerQuestionResponse> {
     const answer = await this.answersRepository.findById(answerId);
 
-    if (!answer) throw new Error('Answer not found.');
+    if (!answer) return left(new ResourceNotFoundError());
 
     const question = await this.questionsRepository.findById(answer.questionId.toString());
 
-    if (!question) throw new Error('Question not found.');
+    if (!question) return left(new ResourceNotFoundError());
 
-    if (authorId !== question.authorId.toString()) throw new Error('Author not allowed.');
+    if (authorId !== question.authorId.toString()) return left(new NotAllowedError());
 
     question.bestAnswerId = answer.id;
 
     await this.questionsRepository.save(question);
 
-    return { question };
+    return right({ question });
   }
 }
