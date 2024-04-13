@@ -1,12 +1,36 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { PaginationParams } from '@/core/repositories/pagination-params';
 import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository';
 import { Question } from '@/domain/forum/enterprise/entities/question';
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   // public items: Question[] = [];
   public items = new Map<UniqueEntityID, Question>();
+
+  async findById(id: string): Promise<Question | null> {
+    const question = Array.from(this.items.values()).find(item => item.id.toString() === id);
+
+    if (!question) return null;
+
+    return question;
+  }
+
+  async findMostRecent({ page }: PaginationParams): Promise<Question[]> {
+    return Array.from(this.items.values())
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20);
+  }
+
   async create(question: Question): Promise<void> {
     // this.items.push(question);
+    this.items.set(question.id, question);
+  }
+
+  async save(question: Question): Promise<void> {
+    // const questionIndex = Array.from(this.items.values()).findIndex(
+    //   item => item.id === question.id
+    // );
+
     this.items.set(question.id, question);
   }
 
@@ -16,5 +40,12 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     if (!question) return null;
 
     return question;
+  }
+  async delete(question: Question): Promise<void> {
+    const questionExists = Array.from(this.items.values()).find(item => item.id === question.id);
+
+    if (questionExists) {
+      this.items.delete(questionExists.id);
+    }
   }
 }

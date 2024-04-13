@@ -37,7 +37,7 @@
         ],
         "max-len": [
             2,
-            125,
+            100,
             {
                 "ignoreStrings": true,
                 "ignoreComments": true

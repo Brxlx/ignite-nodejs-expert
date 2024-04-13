@@ -11,15 +11,17 @@ describe('Create Question', () => {
     sut = new CreateQuestionUseCase(inMemoryQuestionsRepository);
   });
   it('should be able to create a question', async () => {
-    const { question } = await sut.execute({
+    const result = await sut.execute({
       authorId: '1',
       title: 'Nova pergunta',
       content: 'Conteúdo da pergunta',
     });
 
-    expect(question.id).toBeTruthy();
-    expect(inMemoryQuestionsRepository.items.get(question.id)?.id).toEqual(question.id);
+    expect(result.isRight()).toBeTruthy();
+    expect(Array.from(inMemoryQuestionsRepository.items.values())[0]).toEqual(
+      result.value?.question
+    );
 
-    inMemoryQuestionsRepository.items.delete(question.id);
+    // inMemoryQuestionsRepository.items.delete(question.id);
   });
 });

@@ -13,14 +13,16 @@ describe('Create Answer', () => {
   });
 
   it('should be able to create answer', async () => {
-    const { answer } = await sut.execute({
+    const result = await sut.execute({
       questionId: '1',
       instructorId: '1',
       content: 'Nova Resposta',
     });
 
-    expect(answer.id).toBeTruthy();
-    expect(answer.id).toBeInstanceOf(UniqueEntityID);
-    expect(inMemoryAnswersRepository.items.get(answer.id)?.id).toEqual(answer.id);
+    expect(result.isRight()).toBeTruthy();
+    expect(result.value?.answer.id).toBeInstanceOf(UniqueEntityID);
+    expect(Array.from(inMemoryAnswersRepository.items.values())[0].id).toEqual(
+      result.value?.answer.id
+    );
   });
 });

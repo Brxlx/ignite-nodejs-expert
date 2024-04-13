@@ -8,7 +8,10 @@
     "test:watch": "vitest"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Bruno Santos",
+    "email": "brcesar19@gmail.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "8.0.2",
