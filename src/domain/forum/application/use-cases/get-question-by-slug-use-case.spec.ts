@@ -17,18 +17,12 @@ describe('Get Question By Slug', () => {
 
     const result = await sut.execute({ slug: newQuestion.slug.value });
 
-    if (result.isRight()) {
-      expect(result.value?.question.title).toEqual(newQuestion.title);
-    }
-
     expect(result.isRight()).toBeTruthy();
-    // expect(Array.from(inMemoryQuestionsRepository.items.values())[0]).toEqual(result.value);
     expect(result.value).toMatchObject({
       question: expect.objectContaining({
         title: newQuestion.title,
         slug: newQuestion.slug,
       }),
     });
-    // expect(result.value?.question.slug).toEqual(newQuestion.slug);
   });
 });
