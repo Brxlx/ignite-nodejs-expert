@@ -23,8 +23,12 @@ describe('Create Question', () => {
     expect(Array.from(inMemoryQuestionsRepository.items.values())[0]).toEqual(
       result.value?.question
     );
-    expect(Array.from(inMemoryQuestionsRepository.items.values())[0].attachments).toHaveLength(2);
-    expect(Array.from(inMemoryQuestionsRepository.items.values())[0].attachments).toEqual([
+    expect(
+      Array.from(inMemoryQuestionsRepository.items.values())[0].attachments.currentItems
+    ).toHaveLength(2);
+    expect(
+      Array.from(inMemoryQuestionsRepository.items.values())[0].attachments.currentItems
+    ).toEqual([
       expect.objectContaining({ attachmentId: new UniqueEntityID('1') }),
       expect.objectContaining({ attachmentId: new UniqueEntityID('2') }),
     ]);
