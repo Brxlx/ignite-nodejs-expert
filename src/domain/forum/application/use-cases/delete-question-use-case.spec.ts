@@ -41,10 +41,13 @@ describe('Delete Question', () => {
     );
 
     await inMemoryQuestionAttachmentsRepository.create(
-      makeQuestionAttachment({
-        questionId: newQuestion.id,
-        attachmentId: new UniqueEntityID('2'),
-      })
+      makeQuestionAttachment(
+        {
+          questionId: newQuestion.id,
+          attachmentId: new UniqueEntityID('2'),
+        },
+        new UniqueEntityID('attachment-2')
+      )
     );
     // inMemoryQuestionAttachmentsRepository.items.set(
     //   new UniqueEntityID('attachment-2'),

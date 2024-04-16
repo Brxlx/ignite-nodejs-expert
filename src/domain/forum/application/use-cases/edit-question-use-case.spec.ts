@@ -34,18 +34,24 @@ describe('Edit Question', () => {
     await inMemoryQuestionsRepository.create(newQuestion);
 
     inMemoryQuestionAttachmentsRepository.items.set(
-      newQuestion.id,
-      makeQuestionAttachment({
-        questionId: newQuestion.id,
-        attachmentId: new UniqueEntityID('1'),
-      })
+      new UniqueEntityID('attachment-1'),
+      makeQuestionAttachment(
+        {
+          questionId: newQuestion.id,
+          attachmentId: new UniqueEntityID('1'),
+        },
+        new UniqueEntityID('attachment-1')
+      )
     );
     inMemoryQuestionAttachmentsRepository.items.set(
-      newQuestion.id,
-      makeQuestionAttachment({
-        questionId: newQuestion.id,
-        attachmentId: new UniqueEntityID('2'),
-      })
+      new UniqueEntityID('attachment-2'),
+      makeQuestionAttachment(
+        {
+          questionId: newQuestion.id,
+          attachmentId: new UniqueEntityID('2'),
+        },
+        new UniqueEntityID('attachment-2')
+      )
     );
 
     // Prefered way
