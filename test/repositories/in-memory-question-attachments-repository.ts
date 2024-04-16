@@ -24,7 +24,6 @@ export class InMemoryQuestionAttachmentsRepository implements QuestionAttachment
 
     questionAttachments.forEach(questionAttachment => {
       if (questionAttachment.questionId.toString() === questionId) {
-        console.log('val', questionAttachment);
         this.items.delete(questionAttachment.id);
       }
     });

@@ -4,14 +4,18 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { DeleteAnswerUseCase } from './delete-answer-use-case';
 import { NotAllowedError } from './errors/not-allowed-error';
 import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments-repository';
+import { makeAnswerAttachment } from 'test/factories/makeAnswerAttachment';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 // system under test
 let sut: DeleteAnswerUseCase;
 
 describe('Delete Answer', () => {
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswersRepository();
+    inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository);
     sut = new DeleteAnswerUseCase(inMemoryAnswersRepository);
   });
   it('should be able to delete a answer', async () => {
@@ -22,6 +26,23 @@ describe('Delete Answer', () => {
       new UniqueEntityID('answer-1')
     );
     await inMemoryAnswersRepository.create(newAnswer);
+
+    await inMemoryAnswerAttachmentsRepository.create(
+      makeAnswerAttachment(
+        {
+          answerId: newAnswer.id,
+          attachmentId: new UniqueEntityID('1'),
+        },
+        new UniqueEntityID('attachment-1')
+      )
+    );
+
+    await inMemoryAnswerAttachmentsRepository.create(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityID('2'),
+      })
+    );
     // Prefered way
     await sut.execute({
       authorId: newAnswer.authorId.toString(),
@@ -30,6 +51,7 @@ describe('Delete Answer', () => {
     // Alternative way
     // const { answer } = await sut.execute({ slug: 'example-answer' });
     expect(inMemoryAnswersRepository.items).toHaveLength(0);
+    expect(inMemoryAnswerAttachmentsRepository.items).toHaveLength(0);
   });
 
   it('should not be able to delete a answer from another author', async () => {
