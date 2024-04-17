@@ -1,5 +1,6 @@
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository';
 import { SendNotificationUseCase } from './send-notification-use-case';
+import { waitFor } from 'test/utils/wait-for';
 
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository;
 // system under test
@@ -18,7 +19,9 @@ describe('Send Notification', () => {
       content: 'Conteúdo da notificação',
     });
 
-    expect(result.isRight()).toBeTruthy();
-    expect(inMemoryNotificationsRepository.items[0]).toEqual(result.value?.notification);
+    await waitFor(() => expect(result.isRight()).toBeTruthy());
+    await waitFor(() =>
+      expect(inMemoryNotificationsRepository.items[0]).toEqual(result.value?.notification)
+    );
   });
 });

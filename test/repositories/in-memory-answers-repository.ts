@@ -1,4 +1,5 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { DomainEvents } from '@/core/events/domain-events';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository';
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository';
@@ -27,6 +28,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
   async create(answer: Answer): Promise<void> {
     // this.items.push(answer);
     this.items.set(answer.id, answer);
+    DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
   async save(answer: Answer): Promise<void> {
@@ -35,6 +37,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     // );
 
     this.items.set(answer.id, answer);
+    DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
   async delete(answer: Answer): Promise<void> {
