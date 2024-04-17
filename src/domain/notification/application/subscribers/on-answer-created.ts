@@ -20,12 +20,11 @@ export class OnAnswerCreated implements EventHandler {
     const question = await this.questionsRepository.findById(answer.questionId.toString());
 
     if (question) {
-      const sendNotification = await this.sendNotification.execute({
+      await this.sendNotification.execute({
         recipientId: question.authorId.toString(),
         title: `Nova resposta em "${question.title.substring(0, 40).concat('...')}"`,
         content: answer.excerpt,
       });
-      console.log(sendNotification.value);
     }
   }
 }
