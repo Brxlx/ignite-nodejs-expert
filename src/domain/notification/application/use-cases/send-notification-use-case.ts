@@ -3,13 +3,13 @@ import { Either, right } from '@/core/types/either';
 import { Notification } from '../../enterprise/entities/notification';
 import { NotificationsRepository } from '../repositories/notifications-repository';
 
-interface SendNotificationRequest {
+export interface SendNotificationRequest {
   recipientId: string;
   title: string;
   content: string;
 }
 
-type SendNotificationResponse = Either<
+export type SendNotificationResponse = Either<
   null,
   {
     notification: Notification;
@@ -30,8 +30,9 @@ export class SendNotificationUseCase {
       content,
     });
 
-    await this.notificationsRepository.create(notification);
-
+    setTimeout(() => {
+      this.notificationsRepository.create(notification).then(r => r);
+    }, 10);
     return right({ notification });
   }
 }
