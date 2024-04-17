@@ -18,4 +18,8 @@ export class UniqueEntityID {
   constructor(value?: string) {
     this.value = value ?? this.generateId();
   }
+
+  public equals(id: UniqueEntityID): boolean {
+    return id.toValue() === this.value;
+  }
 }
