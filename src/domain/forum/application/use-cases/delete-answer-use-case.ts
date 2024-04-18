@@ -8,7 +8,7 @@ interface DeleteAnswerRequest {
   answerId: string;
 }
 
-type DeleteAnswerResponse = Either<ResourceNotFoundError | NotAllowedError, object>;
+type DeleteAnswerResponse = Either<ResourceNotFoundError | NotAllowedError, null>;
 
 export class DeleteAnswerUseCase {
   constructor(private answersRepository: AnswersRepository) {}
@@ -22,6 +22,6 @@ export class DeleteAnswerUseCase {
 
     await this.answersRepository.delete(answer);
 
-    return right({});
+    return right(null);
   }
 }

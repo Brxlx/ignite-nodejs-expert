@@ -8,7 +8,7 @@ interface DeleteQuestionOnCommentRequest {
   questionCommentId: string;
 }
 
-type DeleteQuestionOnCommentResponse = Either<ResourceNotFoundError | NotAllowedError, object>;
+type DeleteQuestionOnCommentResponse = Either<ResourceNotFoundError | NotAllowedError, null>;
 
 export class DeleteQuestionOnCommentUseCase {
   constructor(private questionCommentsRepository: QuestionCommentsRepository) {}
@@ -25,6 +25,6 @@ export class DeleteQuestionOnCommentUseCase {
 
     await this.questionCommentsRepository.delete(questionComment);
 
-    return right({});
+    return right(null);
   }
 }
